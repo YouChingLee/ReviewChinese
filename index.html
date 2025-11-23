@@ -11,38 +11,59 @@
             padding: 0;
             background-color: #f0f0f0;
             color: #333;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
         }
         .container {
             width: 100%;
             max-width: 600px;
+            margin: 0 auto;
             background-color: white;
             box-shadow: 0 0 10px rgba(0,0,0,0.1);
             padding: 1rem;
             box-sizing: border-box;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        #main-page, #review-page {
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
         }
         h1 {
-            text-align: center;
-            font-size: 2.5rem;
-            margin-bottom: 1.5rem;
+            /* Replaced by .title-container styles */
+            margin: 0;
+            font-size: 2.5rem; /* Adjusted to match Flutter's visual size */
+        }
+        .title-container {
+            width: 100%;
+            height: 100px;
+            padding: 20px;
+            box-sizing: border-box;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
         .button-group {
             display: flex;
             gap: 1rem;
-            margin-bottom: 1rem;
+            height: 100px;
+            padding: 20px 0;
+            box-sizing: border-box;
         }
         button {
             flex: 1;
-            padding: 1rem;
-            font-size: 1.2rem;
+            padding: 0 0.5rem; /* Add some horizontal padding */
+            font-size: 30px; /* Match Flutter buttonFontSize */
             border: none;
             border-radius: 8px;
             color: white;
             cursor: pointer;
             transition: background-color 0.2s;
+            /* Mimic FittedBox behavior */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
         }
         .btn-all { background-color: #42a5f5; } /* lightBlue */
         .btn-unremembered { background-color: #1a237e; } /* indigo[900] */
@@ -56,7 +77,7 @@
         .version {
             text-align: center;
             color: #757575;
-            margin-top: 1rem;
+            margin-top: auto; /* Push to the bottom of the flex container */
         }
 
         /* Review Page */
@@ -68,6 +89,11 @@
             text-align: center;
             margin: -1rem -1rem 1rem -1rem;
         }
+        #review-content {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
         .question-box {
             font-size: 1.8rem;
             min-height: 100px;
@@ -78,11 +104,20 @@
             min-height: 150px;
             padding: 1rem;
             color: #0d47a1;
+            flex-grow: 1; /* Allow answer box to grow */
+            display: flex; /* Use flex to align content */
+            flex-direction: column; /* Stack content vertically */
         }
         .remember-toggle {
             width: 100%;
-            padding: 1rem;
-            margin-top: 1rem;
+            height: 70px; /* Match Flutter button height */
+            padding: 0; /* Remove padding to let flexbox handle alignment */
+            margin: 0;
+            border-radius: 8px;
+            font-size: 30px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
         .btn-remembered { background-color: #4caf50; } /* green */
         .btn-not-remembered { background-color: #ff4081; } /* pinkAccent */
@@ -92,22 +127,27 @@
     <div class="container">
         <!-- Main Page -->
         <div id="main-page">
-            <h1>國文複習記憶機</h1>
+            <div class="title-container">
+                <h1>國文複習記憶機</h1>
+            </div>
             <div class="button-group"><button class="btn-all" data-num="3" data-all="true">3 (全部)</button><button class="btn-unremembered" data-num="3" data-all="false">3 (未記)</button></div>
             <div class="button-group"><button class="btn-all" data-num="10" data-all="true">10 (全部)</button><button class="btn-unremembered" data-num="10" data-all="false">10 (未記)</button></div>
             <div class="button-group"><button class="btn-all" data-num="30" data-all="true">30 (全部)</button><button class="btn-unremembered" data-num="30" data-all="false">30 (未記)</button></div>
             <hr>
-            <button id="reset-button" class="btn-reset">全部設為忘記</button>
+            <div class="button-group"><button id="reset-button" class="btn-reset">全部設為忘記</button></div>
             <hr>
-            <div class="version">ver: 2025/11/23-01</div>
+            <div class="version">ver: 2025/11/23-02</div>
         </div>
 
         <!-- Review Page -->
         <div id="review-page">
             <div class="review-header" id="review-header"></div>
             <div id="review-content" style="cursor: pointer;">
-                <div class="question-box" id="question-box"></div><hr><div class="answer-box" id="answer-box"></div>
+                <div class="question-box" id="question-box"></div>
+                <hr>
+                <div class="answer-box" id="answer-box"></div>
             </div>
+            <hr>
             <button id="remember-toggle-button" class="remember-toggle"></button>
         </div>
     </div>
