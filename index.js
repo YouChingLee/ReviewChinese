@@ -3,14 +3,7 @@ window.addEventListener('load', () => {
     let allQuestions = [];
     let rememberedSet = new Set();
     const REMEMBERED_KEY = 'remembered';
-    const questionBankData = `0424,唐宋八大家，誰？字？號？,韓愈（退之、昌黎先生）、柳宗元（子厚、柳河東）、歐陽修（永叔、醉翁&六一居士）、曾鞏（子固、南豐先生）、王安石（介甫、半山）、蘇洵（明允、老泉）、蘇軾（子瞻&和仲、東坡居士）、蘇轍（子由&同叔、欒城&穎濱遺老）
-0283,《漢書。藝文志。諸子略序》諸子為哪幾家？各出於何官？,共10家。儒家司徒，管教育。道家史官，管記史。陰陽家羲和，管天文。法家理官，即法官。名家禮官，管禮儀。墨家清廟，守天子太廟。縱橫家行人之官，管外交。雜家議官，議政之官。農家農稷，稼穡之官。小說家稗官，小官。
-0118,《詩經，蓼莪》民莫不穀，我獨「何」害，民莫不穀，我獨不「卒」。讀音與全部意思？,何者[賀]負荷，卒者[足]終也。人家都能團員吃飯，只有我蒙受此害，人家都能團員吃飯，只有我不能終養父母。
-0110,《詩經，碩鼠》「三」歲「貫」「女」。「逝」將「去」女。意思？,三者多也非數字，貫者宦也表侍奉，女者汝也指碩鼠貪官污吏，逝者發誓，去者離開。
-0111,《詩經，碩鼠》「爰」得我「直」。莫我肯「勞」。誰之永「號」。讀音與意思？,爰者[原]才是、乃是，直者值得，才是獲得我值得安居之處。勞者[烙]慰勞，不肯慰勞我。號者[豪]哭嚎長嘆，誰還會嘆氣哭嚎？
-0087,《禮記》入其國，其教可知也。請問詩、書、樂、易、禮、春秋個別教啥？,詩溫柔敦厚、書疏通知遠、樂廣博易良、易絜淨精微、禮恭儉莊敬、春秋屬辭比事。`;
-
-
+    // const questionBankData = `...`; // This is now commented out for production.
 
     // --- UI Elements ---
     const mainPage = document.getElementById('main-page');
@@ -32,13 +25,11 @@ window.addEventListener('load', () => {
 
     // --- Data Loading ---
     async function loadData() {
-        // 1. Parse question bank from the hardcoded variable
-        // Note: The original fetch logic is commented out for testing purposes.
-        /*
+        // 1. Fetch and parse question bank from the external file.
         const response = await fetch('question_bank.txt');
         const text = await response.text();
-        */
-        allQuestions = questionBankData.trim().split('\n').map(line => {
+        
+        allQuestions = text.trim().split('\n').map(line => {
             const parts = line.split(',');
             return new Question(parts[0], parts[1], parts[2]);
         });
