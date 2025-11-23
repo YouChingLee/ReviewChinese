@@ -1,4 +1,4 @@
-document.addEventListener('DOMContentLoaded', () => {
+window.addEventListener('load', () => {
     // --- Global State and Constants ---
     let allQuestions = [];
     let rememberedSet = new Set();
