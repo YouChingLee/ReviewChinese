@@ -15,10 +15,11 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- UI Elements ---
     const mainPage = document.getElementById('main-page');
     const reviewPage = document.getElementById('review-page');
-    const reviewHeader = document.getElementById('review-header');
+    const reviewHeaderTitle = document.getElementById('review-header-title');
     const questionBox = document.getElementById('question-box');
     const answerBox = document.getElementById('answer-box');
-    const reviewContent = document.getElementById('review-content');
+    // const reviewContent = document.getElementById('review-content'); // No longer needed
+    const backButton = document.getElementById('back-button');
     const rememberToggleButton = document.getElementById('remember-toggle-button');
 
     // --- Question Class (ES6) ---
@@ -89,7 +90,8 @@ document.addEventListener('DOMContentLoaded', () => {
         reviewSession.counter = 0;
 
         mainPage.style.display = 'none';
-        reviewPage.style.display = 'block';
+        reviewPage.classList.add('grid-layout'); // Activate Grid layout
+        reviewPage.style.display = 'grid'; // Use grid instead of block
 
         nextQuestion();
     }
@@ -112,7 +114,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function endReview() {
         reviewPage.style.display = 'none';
-        mainPage.style.display = 'block';
+        reviewPage.classList.remove('grid-layout'); // Deactivate Grid layout
+        mainPage.style.display = 'flex'; // Revert to flex display
     }
 
     function updateReviewUI() {
@@ -120,10 +123,14 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!q) return;
 
         const unrememberedTotal = allQuestions.length - rememberedSet.size;
-        reviewHeader.textContent = `問題：${reviewSession.counter} / ${reviewSession.totalCount}   尚未記得：${unrememberedTotal} 個`;
+        reviewHeaderTitle.textContent = `問題：${reviewSession.counter} / ${reviewSession.totalCount}   尚未記得：${unrememberedTotal} 個`;
 
         questionBox.textContent = q.q;
-        answerBox.textContent = reviewSession.isTapped ? q.a : '';
+        
+        // CRITICAL FIX: Always set the text content, but control visibility.
+        // This ensures the element always occupies its space, preventing layout shifts.
+        answerBox.textContent = q.a;
+        answerBox.style.visibility = reviewSession.isTapped ? 'visible' : 'hidden';
 
         if (reviewSession.isCurrentRemembered) {
             rememberToggleButton.textContent = '記得了';
@@ -154,17 +161,26 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // Review page tap to show answer
-    reviewContent.addEventListener('click', () => {
-        if (!reviewSession.isTapped) {
-            reviewSession.isTapped = true;
-            updateReviewUI();
-        } else {
-            nextQuestion();
+    reviewPage.addEventListener('click', (e) => {
+        // If the click is on the toggle button or its container, do nothing.
+        // This prevents the page from advancing when the button is clicked.
+        if (rememberToggleButton.contains(e.target)) {
+            return;
+        }
+
+        // The rest of the page acts as a gesture detector
+        if (reviewSession.currentQuestion) { // Ensure session is active
+            if (!reviewSession.isTapped) {
+                reviewSession.isTapped = true;
+                updateReviewUI();
+            } else {
+                nextQuestion();
+            }
         }
     });
 
     // Remember/Unremember toggle button
-    rememberToggleButton.addEventListener('click', () => {
+    rememberToggleButton.addEventListener('click', (e) => {
         const currentId = reviewSession.currentQuestion.id;
         if (reviewSession.isCurrentRemembered) {
             rememberedSet.delete(currentId);
@@ -174,6 +190,11 @@ document.addEventListener('DOMContentLoaded', () => {
         saveRememberedSet();
         reviewSession.isCurrentRemembered = !reviewSession.isCurrentRemembered;
         updateReviewUI();
+    });
+
+    // Back button on review page
+    backButton.addEventListener('click', () => {
+        endReview();
     });
 
     // --- Initialization ---

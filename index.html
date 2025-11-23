@@ -19,7 +19,7 @@
             background-color: white;
             box-shadow: 0 0 10px rgba(0,0,0,0.1);
             padding: 1rem;
-            box-sizing: border-box;
+            box-sizing: border-box; /* This is correct */
             min-height: 100vh;
             display: flex;
             flex-direction: column;
@@ -31,17 +31,17 @@
         }
         h1 {
             /* Replaced by .title-container styles */
-            margin: 0;
-            font-size: 2.5rem; /* Adjusted to match Flutter's visual size */
+            margin: 0; /* font-size is now controlled by .title-container */
+            font-size: 2.5rem; /* A base font size */
         }
         .title-container {
             width: 100%;
-            height: 100px;
-            padding: 20px;
+            height: 100px; /* Fixed height like Flutter's SizedBox */
             box-sizing: border-box;
             display: flex;
             justify-content: center;
             align-items: center;
+            padding: 20px;
         }
         .button-group {
             display: flex;
@@ -64,6 +64,7 @@
             justify-content: center;
             align-items: center;
             overflow: hidden;
+            line-height: 1; /* Helps with vertical centering of single-line text */
         }
         .btn-all { background-color: #42a5f5; } /* lightBlue */
         .btn-unremembered { background-color: #1a237e; } /* indigo[900] */
@@ -82,45 +83,79 @@
 
         /* Review Page */
         #review-page { display: none; }
+
+        /* NEW: CSS Grid Layout for Review Page */
+        #review-page.grid-layout {
+            display: grid;
+            grid-template-rows: auto 160px auto 1fr auto; /* Header, Question(fixed), HR, Answer(fills), HR+Button */
+            grid-template-areas: 
+                "header"
+                "question"
+                "hr1"
+                "answer"
+                "footer";
+            height: 100%; /* Ensure it fills the container's height */
+        }
+
         .review-header {
+            /* New styles for flex layout */
+            display: flex;
+            align-items: center;
+            justify-content: center; /* Center title by default */
+            position: relative; /* For absolute positioning of back button */
+            height: 56px; /* A standard app bar height */
+            box-sizing: border-box;
+
+            grid-area: header;
             padding: 0.5rem;
             background-color: #2196f3;
             color: white;
-            text-align: center;
             margin: -1rem -1rem 1rem -1rem;
         }
-        #review-content {
-            flex-grow: 1;
-            display: flex;
-            flex-direction: column;
-        }
         .question-box {
-            font-size: 1.8rem;
-            min-height: 100px;
+            grid-area: question;
+            font-size: 26px; /* Match Flutter's TextStyle */
             padding: 1rem;
+            overflow-y: auto; /* Allow scrolling if content overflows */
         }
         .answer-box {
-            font-size: 1.8rem;
-            min-height: 150px;
+            grid-area: answer;
+            font-size: 26px; /* Match Flutter's TextStyle */
             padding: 1rem;
             color: #0d47a1;
-            flex-grow: 1; /* Allow answer box to grow */
-            display: flex; /* Use flex to align content */
-            flex-direction: column; /* Stack content vertically */
+            word-wrap: break-word; /* Ensure long text wraps */
+            overflow-y: auto; /* Allow scrolling if content overflows */
+            visibility: hidden; /* Hide content, but keep space occupied */
+            min-height: 0; /* CRITICAL: Prevents grid item from growing based on content */
         }
-        .remember-toggle {
-            width: 100%;
-            height: 70px; /* Match Flutter button height */
-            padding: 0; /* Remove padding to let flexbox handle alignment */
-            margin: 0;
-            border-radius: 8px;
-            font-size: 30px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+        .back-arrow {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            width: 12px;
+            height: 12px;
+            border-left: 3px solid white;
+            border-bottom: 3px solid white;
+            transform: translateY(-50%) rotate(45deg);
+            cursor: pointer;
+        }
+        #review-header-title {
+            text-align: center;
         }
         .btn-remembered { background-color: #4caf50; } /* green */
         .btn-not-remembered { background-color: #ff4081; } /* pinkAccent */
+
+        .remember-toggle {
+            /* Mimics Flutter's Center(child: SizedBox(width: 300, height: 70)) */
+            display: block; /* Or flex, but block with auto margin works well */
+            width: 100%;
+            max-width: 300px;
+            height: 70px;
+            margin: 0 auto; /* Horizontally centers the button */
+            font-size: 30px; /* Matches buttonFontSize */
+            border-radius: 8px; /* A sensible default from Flutter's ElevatedButton */
+            border: none;
+        }
     </style>
 </head>
 <body>
@@ -136,19 +171,21 @@
             <hr>
             <div class="button-group"><button id="reset-button" class="btn-reset">全部設為忘記</button></div>
             <hr>
-            <div class="version">ver: 2025/11/23-02</div>
+            <div class="version">ver: 2025/11/23-03</div>
         </div>
 
         <!-- Review Page -->
         <div id="review-page">
-            <div class="review-header" id="review-header"></div>
-            <div id="review-content" style="cursor: pointer;">
-                <div class="question-box" id="question-box"></div>
-                <hr>
-                <div class="answer-box" id="answer-box"></div>
+            <div class="review-header">
+                <div id="back-button" class="back-arrow"></div>
+                <span id="review-header-title"></span>
             </div>
-            <hr>
-            <button id="remember-toggle-button" class="remember-toggle"></button>
+            <div class="question-box" id="question-box"></div>
+            <hr style="grid-area: hr1; margin: 0;">
+            <div class="answer-box" id="answer-box"></div>
+            <div class="review-footer" style="grid-area: footer;">
+                <hr style="margin: 0 0 10px 0;"><button id="remember-toggle-button" class="remember-toggle"></button>
+            </div>
         </div>
     </div>
     <script src="index.js"></script>
