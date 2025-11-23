@@ -26,7 +26,9 @@ window.addEventListener('load', () => {
     // --- Data Loading ---
     async function loadData() {
         // 1. Fetch and parse question bank from the external file.
-        const response = await fetch('question_bank.txt');
+        // Use { cache: 'no-cache' } to ensure the browser always validates the file
+        // with the server, preventing stale data issues on mobile.
+        const response = await fetch('question_bank.txt', { cache: 'no-cache' });
         const text = await response.text();
         
         allQuestions = text.trim().split('\n').map(line => {
