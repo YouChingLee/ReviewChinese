@@ -18,7 +18,6 @@ window.addEventListener('load', () => {
     const reviewHeaderTitle = document.getElementById('review-header-title');
     const questionBox = document.getElementById('question-box');
     const answerBox = document.getElementById('answer-box');
-    // const reviewContent = document.getElementById('review-content'); // No longer needed
     const backButton = document.getElementById('back-button');
     const rememberToggleButton = document.getElementById('remember-toggle-button');
 
@@ -170,7 +169,12 @@ window.addEventListener('load', () => {
 
         // The rest of the page acts as a gesture detector
         if (reviewSession.currentQuestion) { // Ensure session is active
-            if (!reviewSession.isTapped) {
+            // LOGIC FIX: If the question is already remembered, tapping anywhere should go to the next question.
+            if (reviewSession.isCurrentRemembered) {
+                nextQuestion();
+                return;
+            }
+            if (!reviewSession.isTapped) { // If not remembered, the first tap shows the answer.
                 reviewSession.isTapped = true;
                 updateReviewUI();
             } else {
@@ -206,12 +210,8 @@ window.addEventListener('load', () => {
     // --- Initialization ---
     async function initializeApp() {
         await loadData();
-
-        // Set initial height and add listener for window resize
         updateContainerHeight();
         window.addEventListener('resize', updateContainerHeight);
-        // After data is loaded, the app is ready for user interaction.
-        // No further action needed here as event listeners are already set up.
     }
 
     initializeApp();
