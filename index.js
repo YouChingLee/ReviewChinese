@@ -197,9 +197,19 @@ window.addEventListener('load', () => {
         endReview();
     });
 
+    // --- Layout Management ---
+    function updateContainerHeight() {
+        const container = document.querySelector('.container');
+        container.style.height = `${window.innerHeight}px`;
+    }
+
     // --- Initialization ---
     async function initializeApp() {
         await loadData();
+
+        // Set initial height and add listener for window resize
+        updateContainerHeight();
+        window.addEventListener('resize', updateContainerHeight);
         // After data is loaded, the app is ready for user interaction.
         // No further action needed here as event listeners are already set up.
     }
