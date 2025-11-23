@@ -114,13 +114,13 @@
         }
         .question-box {
             grid-area: question;
-            font-size: 26px; /* Match Flutter's TextStyle */
+            font-size: 25px; /* Adjusted to prevent overflow */
             padding: 1rem;
             overflow-y: auto; /* Allow scrolling if content overflows */
         }
         .answer-box {
             grid-area: answer;
-            font-size: 26px; /* Match Flutter's TextStyle */
+            font-size: 25px; /* Adjusted to prevent overflow */
             padding: 1rem;
             color: #0d47a1;
             word-wrap: break-word; /* Ensure long text wraps */
@@ -170,7 +170,7 @@
             <hr>
             <div class="button-group"><button id="reset-button" class="btn-reset">全部設為忘記</button></div>
             <hr>
-            <div class="version">ver: 2025/11/23-06</div>
+            <div class="version">ver: 2025/11/23-07</div>
         </div>
 
         <!-- Review Page -->
